@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: redis-deploy
+    labels:
+        app: redis
+spec: 
+    replicas: 4
+    selector:
+        matchLabels:
+            app: redis
+    template: 
+        metadata:
+            labels:
+                app: redis
+        spec:
+            containers:
+            - name: redis
+              image: redis:7.0.9
+              ports:
+              - containerPort: 6379 
+            nodeSelector:
+                role: worker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: httpd-deploy
+    labels:
+        app: httpd
+spec:
+    replicas: 10
+    selector:
+        matchLabels:
+            app: httpd
+    template:
+        metadata:
+            labels:
+                app: httpd
+        spec:
+            containers:
+            - name: httpd
+              image: httpd:2.4.56
+              ports:
+              - containerPort: 80
+            nodeSelector:
+                role: worker
+             
